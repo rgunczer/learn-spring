@@ -3,6 +3,7 @@ package com.home.demo_patch.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,23 +36,40 @@ public class EmployeeController {
     public Employee patchEmployee(
         @PathVariable Long eid,
         @RequestBody Map<String, Object> payload
-    ) {
+    ) throws BadRequestException {
         final var emp = findById(eid);
         if (emp == null) {
             throw new RuntimeException("Employee with id [" + eid + "] NOT found");
         }
 
-        return null;
+        if (payload.containsKey("id")) {
+            throw new BadRequestException("Employee id not allowed in request body [" + payload.get("id") + "]");
+        }
+
+        final var patchedEmp = apply(payload, emp);
+
+        final var savedEmp = save(patchedEmp);
+
+        return savedEmp;
     }
 
     // ------------------------------------------
     // utils
 
-    public Employee findById(Long id) {
+    private Employee findById(Long id) {
         return employees.stream()
             .filter(e -> e.id.equals(id))
             .findFirst()
             .orElse(null);
+    }
+
+    private Employee apply(Map<String, Object> payload, Employee emp) {
+
+        return emp;
+    }
+
+    private Employee save(final Employee emp) {
+        return emp;
     }
 
 }
