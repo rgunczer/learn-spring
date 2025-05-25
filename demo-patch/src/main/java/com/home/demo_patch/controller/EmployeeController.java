@@ -36,8 +36,22 @@ public class EmployeeController {
         @PathVariable Long eid,
         @RequestBody Map<String, Object> payload
     ) {
+        final var emp = findById(eid);
+        if (emp == null) {
+            throw new RuntimeException("Employee with id [" + eid + "] NOT found");
+        }
 
         return null;
+    }
+
+    // ------------------------------------------
+    // utils
+
+    public Employee findById(Long id) {
+        return employees.stream()
+            .filter(e -> e.id.equals(id))
+            .findFirst()
+            .orElse(null);
     }
 
 }
