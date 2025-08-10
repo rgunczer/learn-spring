@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: envars
+
+some:
+  SOME_VALUE: foo
+  SOME_LIST:
+    - "apple"
+    - "cider"
+    - "orange"
+    - "juice"
+    - "melon"
